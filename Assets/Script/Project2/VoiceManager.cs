@@ -9,7 +9,7 @@ public class WitPromptExtractor : MonoBehaviour
     
     [SerializeField] GameObject magicEffect;
     [SerializeField] private AppVoiceExperience voiceExperience;
-    [SerializeField] private MeshyAPI meshyClient;
+    [SerializeField] private LeonardoAPI leonardoClient;
     
     private const string CREATE_ASSET_INTENT = "createAsset";
     private string _spellPrompt;
@@ -18,7 +18,7 @@ public class WitPromptExtractor : MonoBehaviour
     private float chargeTime = 0f;
     private const float CHARGE_REQUIRED = 3f;
     private bool requestCanceled = false;
-    private bool loadingModel = false;
+    public bool loadingModel = false;
     
     private ParticleSystem particleSystem;
     private ParticleSystem.MainModule mainModule;
@@ -56,7 +56,6 @@ public class WitPromptExtractor : MonoBehaviour
 
     private void RestartSpell()
     {
-        Debug.Log("BUTTON RELEASED");
         magicEffect.SetActive(false);
         DeactivateVoiceExperience();
         spellCharging = false;
@@ -69,6 +68,7 @@ public class WitPromptExtractor : MonoBehaviour
     {
         if (!loadingModel)
         {
+            Debug.Log("BUTTON RELEASED");
             RestartSpell();
 
             if (chargeTime < CHARGE_REQUIRED)
@@ -129,15 +129,14 @@ public class WitPromptExtractor : MonoBehaviour
         {
             Debug.Log($"Generated Prompt: {prompt}");
             RestartSpell();
-            Generate3DModel(prompt);
+            GenerateImage(prompt);
         }
     }
     
-    private void Generate3DModel(string prompt)
+    private void GenerateImage(string prompt)
     {
         loadingModel = true;
-        meshyClient.Generate3DModel(prompt);
-        Debug.Log($"Generating 3D model with prompt: {prompt}");
+        leonardoClient.generateImage(prompt);
     }
     
     private void ActivateVoiceExperience()
